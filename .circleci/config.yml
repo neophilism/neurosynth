@@ -1,0 +1,22 @@
+version: 2.1
+
+# Legacy scientific package; this is only an inventory gate until the full
+# pinned research environment and statistical regression suite are defined.
+jobs:
+  legacy-source-inventory:
+    docker:
+      - image: cimg/python:3.12
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Validate source inventory and development roadmap
+          command: |
+            test -s README.md
+            test -s setup.py
+            test -s registry/roadmap.json
+            python3 -c 'import json; json.load(open("registry/roadmap.json"))'
+workflows:
+  inventory-only:
+    jobs:
+      - legacy-source-inventory
